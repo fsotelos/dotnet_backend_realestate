@@ -1,0 +1,39 @@
+### Get first page (default, no filters)
+GET https://localhost:7259/api/v1.0/properties
+Accept: application/json
+
+###
+
+### Search by name
+GET https://localhost:7259/api/v1.0/properties?name=Douglas
+Accept: application/json
+
+###
+
+### Search by address
+GET https://localhost:7259/api/v1.0/properties?address=Grenada
+Accept: application/json
+
+###
+
+### Filter by price range
+GET https://localhost:7259/api/v1.0/properties?minPrice=100000&maxPrice=500000
+Accept: application/json
+
+###
+
+### Combine filters (name + price range)
+GET https://localhost:7259/api/v1.0/properties?name=Douglas&minPrice=100000&maxPrice=1500000
+Accept: application/json
+
+###
+
+### Pagination test (page 2, 10 per page)
+GET https://localhost:7259/api/v1.0/properties?page=2&pageSize=10
+Accept: application/json
+
+###
+
+### All filters combined
+GET https://localhost:7259/api/v1.0/properties?name=Pro&address=Street&minPrice=200000&maxPrice=800000&page=1&pageSize=5
+Accept: application/json
