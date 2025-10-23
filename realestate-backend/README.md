@@ -18,6 +18,8 @@ A RESTful API built with **.NET 9** and **C#** for managing property data in a M
 
 This project follows **Clean Architecture** principles, separating concerns into distinct layers for maintainability and testability:
 
+<img width="291" height="278" alt="image" src="https://github.com/user-attachments/assets/ae003b24-f7fb-4862-b6f6-f2a77f5f87d3" />
+
 - **Domain Layer**: Contains core business entities, interfaces, services, and domain logic (e.g., `Property`, `IPropertyRepository`, `PropertyFilteringService`).
 - **Application Layer**: Handles use cases, queries, commands, DTOs, and mappings (e.g., `GetPropertiesQuery`, `GetPropertiesQueryHandler`, `PropertyDto`).
 - **Infrastructure Layer**: Manages data access, external services, and persistence (e.g., `PropertyRepository`, `MongoDbContext`).
