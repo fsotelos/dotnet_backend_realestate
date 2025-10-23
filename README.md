@@ -109,8 +109,10 @@ For coverage reports, use the provided `coverage.runsettings` files in the test 
 ## 📸 Screenshots / Demo
 
 
-[▶️ Watch Demo Video]
-https://youtu.be/3lNAKKzeXmQ
+## 📹 Demo Video
+
+[![Watch the video](https://img.youtube.com/vi/3lNAKKzeXmQ/0.jpg)](https://youtu.be/3lNAKKzeXmQ)
+
 
 ## 📄 License
 
