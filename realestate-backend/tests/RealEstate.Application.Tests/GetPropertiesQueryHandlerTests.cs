@@ -4,20 +4,20 @@ using RealEstate.Application.DTOs;
 using RealEstate.Application.Handlers;
 using RealEstate.Application.Queries;
 using RealEstate.Domain.Entities;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Domain.Services;
 using FluentAssertions;
 
 namespace RealEstate.Application.Tests;
 
 public class GetPropertiesQueryHandlerTests
 {
-    private readonly Mock<IPropertyRepository> _propertyRepositoryMock;
+    private readonly Mock<IPropertyFilteringService> _propertyFilteringServiceMock;
     private readonly IMapper _mapper;
     private readonly GetPropertiesQueryHandler _handler;
 
     public GetPropertiesQueryHandlerTests()
     {
-        _propertyRepositoryMock = new Mock<IPropertyRepository>();
+        _propertyFilteringServiceMock = new Mock<IPropertyFilteringService>();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -25,10 +25,10 @@ public class GetPropertiesQueryHandlerTests
         });
         _mapper = new Mapper(config);
 
-        _handler = new GetPropertiesQueryHandler(_propertyRepositoryMock.Object, _mapper);
+        _handler = new GetPropertiesQueryHandler(_propertyFilteringServiceMock.Object, _mapper);
     }
 
-    [Fact]
+    [Test]
     public async Task Handle_Should_Return_Paginated_Result_With_Properties()
     {
         // Arrange
@@ -59,8 +59,8 @@ public class GetPropertiesQueryHandlerTests
             }
         };
 
-        _propertyRepositoryMock
-            .Setup(x => x.GetFilteredAsync("Test Property", null, 100000, 500000, 1, 10))
+        _propertyFilteringServiceMock
+            .Setup(x => x.GetFilteredPropertiesAsync("Test Property", null, 100000, 500000, 1, 10))
             .ReturnsAsync((properties, 1));
 
         // Act
@@ -74,9 +74,10 @@ public class GetPropertiesQueryHandlerTests
         result.PageSize.Should().Be(10);
         result.TotalPages.Should().Be(1);
         result.Properties.First().Name.Should().Be("Test Property 1");
+        result.Properties.First().Price.Should().Be(250000);
     }
 
-    [Fact]
+    [Test]
     public async Task Handle_Should_Return_Empty_Result_When_No_Properties_Found()
     {
         // Arrange
@@ -87,8 +88,8 @@ public class GetPropertiesQueryHandlerTests
             PageSize = 10
         };
 
-        _propertyRepositoryMock
-            .Setup(x => x.GetFilteredAsync("Nonexistent Property", null, null, null, 1, 10))
+        _propertyFilteringServiceMock
+            .Setup(x => x.GetFilteredPropertiesAsync("Nonexistent Property", null, null, null, 1, 10))
             .ReturnsAsync((new List<PropertyWithImages>(), 0));
 
         // Act
@@ -101,7 +102,7 @@ public class GetPropertiesQueryHandlerTests
         result.TotalPages.Should().Be(0);
     }
 
-    [Fact]
+    [Test]
     public async Task Handle_Should_Use_Default_Pagination_Values()
     {
         // Arrange
@@ -110,8 +111,8 @@ public class GetPropertiesQueryHandlerTests
             Name = "Test Property"
         };
 
-        _propertyRepositoryMock
-            .Setup(x => x.GetFilteredAsync("Test Property", null, null, null, 1, 10))
+        _propertyFilteringServiceMock
+            .Setup(x => x.GetFilteredPropertiesAsync("Test Property", null, null, null, 1, 10))
             .ReturnsAsync((new List<PropertyWithImages>(), 0));
 
         // Act

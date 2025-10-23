@@ -1,23 +1,33 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using NUnit.Framework;
 using RealEstate.Application.DTOs;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace RealEstate.Presentation.Tests;
 
-public class PropertiesControllerTests : IClassFixture<WebApplicationFactory<Program>>
+[TestFixture]
+public class PropertiesControllerTests
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
+    private WebApplicationFactory<Program> _factory;
+    private HttpClient _client;
 
-    public PropertiesControllerTests(WebApplicationFactory<Program> factory)
+    [SetUp]
+    public void Setup()
     {
-        _factory = factory;
+        _factory = new WebApplicationFactory<Program>();
         _client = _factory.CreateClient();
     }
 
-    [Fact]
+    [TearDown]
+    public void TearDown()
+    {
+        _client?.Dispose();
+        _factory?.Dispose();
+    }
+
+    [Test]
     public async Task GetProperties_Should_Return_Ok_With_Valid_Query()
     {
         // Arrange
@@ -33,9 +43,14 @@ public class PropertiesControllerTests : IClassFixture<WebApplicationFactory<Pro
         result.Should().NotBeNull();
         result!.Page.Should().Be(1);
         result.PageSize.Should().Be(10);
+        // Verify that all returned properties match the name filter
+        foreach (var property in result.Properties)
+        {
+            property.Name.Should().Contain("Test", because: "Name filter should match");
+        }
     }
 
-    [Fact]
+    [Test]
     public async Task GetProperties_Should_Return_Ok_With_Price_Filters()
     {
         // Arrange
@@ -50,9 +65,15 @@ public class PropertiesControllerTests : IClassFixture<WebApplicationFactory<Pro
         var result = await response.Content.ReadFromJsonAsync<PaginatedPropertyDto>();
         result.Should().NotBeNull();
         result!.Properties.Should().NotBeNull();
+        // Verify that all returned properties are within the price range
+        foreach (var property in result.Properties)
+        {
+            property.Price.Should().BeGreaterOrEqualTo(100000);
+            property.Price.Should().BeLessOrEqualTo(500000);
+        }
     }
 
-    [Fact]
+    [Test]
     public async Task GetProperties_Should_Return_Ok_With_Text_Search()
     {
         // Arrange
@@ -66,9 +87,15 @@ public class PropertiesControllerTests : IClassFixture<WebApplicationFactory<Pro
 
         var result = await response.Content.ReadFromJsonAsync<PaginatedPropertyDto>();
         result.Should().NotBeNull();
+        // Verify that all returned properties match the search criteria
+        foreach (var property in result.Properties)
+        {
+            property.Name.Should().Contain("House", because: "Name filter should match");
+            property.Address.Should().Contain("Street", because: "Address filter should match");
+        }
     }
 
-    [Fact]
+    [Test]
     public async Task GetProperties_Should_Use_Default_Pagination_When_Not_Specified()
     {
         // Act
@@ -83,7 +110,7 @@ public class PropertiesControllerTests : IClassFixture<WebApplicationFactory<Pro
         result.PageSize.Should().Be(10);
     }
 
-    [Fact]
+    [Test]
     public async Task GetProperties_Should_Return_Json_Content_Type()
     {
         // Act

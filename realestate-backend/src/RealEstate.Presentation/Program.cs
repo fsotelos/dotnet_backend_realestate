@@ -70,6 +70,10 @@ namespace RealEstate.Presentation
                 RealEstate.Domain.Interfaces.IPropertyRepository,
                 RealEstate.Infrastructure.Repositories.PropertyRepository>();
 
+            builder.Services.AddScoped<
+                RealEstate.Domain.Services.IPropertyFilteringService,
+                RealEstate.Domain.Services.PropertyFilteringService>();
+
             
             builder.Services.AddCors(options =>
             {

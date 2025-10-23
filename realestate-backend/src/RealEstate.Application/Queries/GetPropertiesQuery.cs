@@ -5,6 +5,7 @@ namespace RealEstate.Application.Queries
 {
     public class GetPropertiesQuery : IRequest<PaginatedPropertyDto>
     {
+        public string? Id { get; set; } = null;
         public string? Name { get; set; }
         public string? Address { get; set; }
         public decimal? MinPrice { get; set; }

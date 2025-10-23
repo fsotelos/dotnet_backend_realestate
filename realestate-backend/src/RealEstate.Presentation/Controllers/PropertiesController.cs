@@ -17,6 +17,22 @@ namespace RealEstate.Presentation.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PropertyDto), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<PropertyDto>> GetById(string id)
+        {
+            var query = new GetPropertyByIdQuery { Id = id };
+
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedPropertyDto), 200)]
         public async Task<ActionResult<PaginatedPropertyDto>> Get(
@@ -40,5 +56,6 @@ namespace RealEstate.Presentation.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
     }
 }

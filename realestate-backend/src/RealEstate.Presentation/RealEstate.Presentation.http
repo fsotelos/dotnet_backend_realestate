@@ -2,10 +2,14 @@
 GET https://localhost:7259/api/v1.0/properties
 Accept: application/json
 
+### Get property by Id
+GET https://localhost:7259/api/v1.0/properties/bd38a8cb-891d-4bfb-8f0c-7db9a612521b
+Accept: application/json
+
 ###
 
 ### Search by name
-GET https://localhost:7259/api/v1.0/properties?name=Douglas
+GET https://localhost:7259/api/v1.0/properties?name=Arms
 Accept: application/json
 
 ###
