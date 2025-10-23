@@ -5,7 +5,7 @@ namespace RealEstate.Domain.Tests;
 
 public class PropertyTests
 {
-    [Fact]
+    [Test]
     public void Property_Should_Be_Created_With_Valid_Data()
     {
         // Arrange
@@ -29,10 +29,9 @@ public class PropertyTests
         property.Id.Should().NotBeNullOrEmpty();
     }
 
-    [Theory]
-    [InlineData("")]
-    [InlineData(null)]
-    public void Property_Should_Throw_Exception_When_Name_Is_Invalid(string invalidName)
+    [TestCase("")]
+    [TestCase(null)]
+    public void Property_Should_Throw_Exception_When_Name_Is_Invalid(string? invalidName)
     {
         // Arrange
         var address = "123 Main St";
@@ -46,7 +45,7 @@ public class PropertyTests
         action.Should().Throw<ArgumentException>().WithMessage("*Name cannot be empty*");
     }
 
-    [Fact]
+    [Test]
     public void Property_Should_Throw_Exception_When_Price_Is_Zero()
     {
         // Arrange
@@ -62,7 +61,7 @@ public class PropertyTests
         action.Should().Throw<ArgumentException>().WithMessage("*Price must be greater than zero*");
     }
 
-    [Fact]
+    [Test]
     public void Property_Should_Add_Image_Successfully()
     {
         // Arrange
@@ -78,7 +77,7 @@ public class PropertyTests
         property.Images.First().Enabled.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public void Property_Should_Calculate_Age_Correctly()
     {
         // Arrange

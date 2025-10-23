@@ -38,10 +38,14 @@ namespace RealEstate.Infrastructure.Repositories
             var builder = Builders<Property>.Filter;
 
             // Use $text search for name and address
-            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(address))
+            if (!string.IsNullOrEmpty(name))
             {
-                var search = $"{name} {address}".Trim();
-                filters.Add(builder.Text(search));
+                filters.Add(builder.Regex(x => x.Name, new BsonRegularExpression(name, "i")));
+            }
+
+            if (!string.IsNullOrEmpty(address))
+            {
+                filters.Add(builder.Regex(x => x.Address, new BsonRegularExpression(address, "i")));
             }
 
             // Add price filters

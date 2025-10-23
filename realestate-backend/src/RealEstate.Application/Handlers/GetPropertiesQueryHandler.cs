@@ -2,24 +2,24 @@ using AutoMapper;
 using MediatR;
 using RealEstate.Application.DTOs;
 using RealEstate.Application.Queries;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Domain.Services;
 
 namespace RealEstate.Application.Handlers
 {
     public class GetPropertiesQueryHandler : IRequestHandler<GetPropertiesQuery, PaginatedPropertyDto>
     {
-        private readonly IPropertyRepository _propertyRepository;
+        private readonly IPropertyFilteringService _propertyFilteringService;
         private readonly IMapper _mapper;
 
-        public GetPropertiesQueryHandler(IPropertyRepository propertyRepository, IMapper mapper)
+        public GetPropertiesQueryHandler(IPropertyFilteringService propertyFilteringService, IMapper mapper)
         {
-            _propertyRepository = propertyRepository;
+            _propertyFilteringService = propertyFilteringService;
             _mapper = mapper;
         }
 
         public async Task<PaginatedPropertyDto> Handle(GetPropertiesQuery request, CancellationToken cancellationToken)
         {
-            var (properties, totalCount) = await _propertyRepository.GetFilteredAsync(
+            var (properties, totalCount) = await _propertyFilteringService.GetFilteredPropertiesAsync(
                 request.Name,
                 request.Address,
                 request.MinPrice,
